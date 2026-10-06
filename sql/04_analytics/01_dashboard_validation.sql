@@ -32,7 +32,7 @@ SELECT
     SUM(f.Revenue) AS Monthly_Revenue
 FROM gold.fact_sales f
 JOIN gold.dim_date d ON f.Date_key = d.Date_key
-WHERE f.Is_cancelled = 0 AND f.Is_non_product = 0 AND d.Year = 2010
+WHERE f.Is_cancelled = 0 AND f.Is_non_product = 0 AND f.Is_anomaly_price = 0 AND d.Year = 2010
 GROUP BY d.Year, d.Month, d.Month_name
 ORDER BY d.Year, d.Month;
 
@@ -42,7 +42,7 @@ SELECT TOP 5
     SUM(f.Revenue) AS Total_Revenue
 FROM gold.fact_sales f
 JOIN gold.dim_customer c ON f.Customer_key = c.Customer_key
-WHERE f.Is_cancelled = 0 AND f.Is_non_product = 0
+WHERE f.Is_cancelled = 0 AND f.Is_non_product = 0 AND f.Is_anomaly_price = 0
 GROUP BY c.Country
 ORDER BY Total_Revenue DESC;
 
