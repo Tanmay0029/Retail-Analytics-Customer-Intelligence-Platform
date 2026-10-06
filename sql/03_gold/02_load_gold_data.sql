@@ -74,19 +74,31 @@ BEGIN
 		PRINT '>> Loading dim_date';
 		DELETE FROM gold.dim_date;
 
+		-- Power BI requires a Date Table to have NO gaps in dates. 
+        -- So instead of picking distinct dates from sales, we generate a continuous calendar.
+		DECLARE @StartDate DATE = (SELECT MIN(Order_date) FROM silver.online_retail);
+		DECLARE @EndDate DATE = (SELECT MAX(Order_date) FROM silver.online_retail);
+
+		WITH DateGenerator AS (
+			SELECT @StartDate AS DateValue
+			UNION ALL
+			SELECT DATEADD(day, 1, DateValue)
+			FROM DateGenerator
+			WHERE DateValue < @EndDate
+		)
 		INSERT INTO gold.dim_date (Date_key, Date, Year, Quarter, Month, Month_name, Week, Day, Day_name)
-		SELECT DISTINCT
-			CAST(CONVERT(VARCHAR(8), Order_date, 112) AS INT) AS Date_key, 
-			Order_date,
-			Order_year,
-			Order_quarter,
-			Order_month,
-			DATENAME(MONTH, Order_date) AS Month_name,
-			Order_week,
-			Order_day,
-			Order_day_name
-		FROM silver.online_retail
-        WHERE Order_date IS NOT NULL;
+		SELECT 
+			CAST(CONVERT(VARCHAR(8), DateValue, 112) AS INT) AS Date_key, 
+			DateValue AS Date,
+			YEAR(DateValue) AS Year,
+			DATEPART(QUARTER, DateValue) AS Quarter,
+			MONTH(DateValue) AS Month,
+			DATENAME(MONTH, DateValue) AS Month_name,
+			DATEPART(WEEK, DateValue) AS Week,
+			DAY(DateValue) AS Day,
+			DATENAME(WEEKDAY, DateValue) AS Day_name
+		FROM DateGenerator
+		OPTION (MAXRECURSION 0); -- Allows infinite recursion for large date ranges
 		SET @end_time = GETDATE();
 		PRINT '   - Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
 
