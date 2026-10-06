@@ -57,36 +57,49 @@ PRINT '================================================';
 PRINT 'PAGE 2: CUSTOMER INSIGHTS & RETENTION';
 PRINT '================================================';
 
--- 1. Top 10 Most Valuable Customers (By Revenue)
-SELECT TOP 10
-    c.Customer_id,
-    c.Country,
-    SUM(f.Revenue) AS Total_Lifetime_Value
-FROM gold.fact_sales f
-JOIN gold.dim_customer c ON f.Customer_key = c.Customer_key
-WHERE f.Is_cancelled = 0 AND c.Customer_id != -1 -- Exclude anonymous
-GROUP BY c.Customer_id, c.Country
-ORDER BY Total_Lifetime_Value DESC;
-
--- 2. Registered vs Anonymous Revenue Split
+-- 1. Registered vs Anonymous Revenue Split (Donut Chart)
 SELECT 
     CASE WHEN c.Customer_id = -1 THEN 'Anonymous' ELSE 'Registered' END AS Customer_Type,
-    SUM(f.Revenue) AS Total_Revenue,
-    CAST(SUM(f.Revenue) / (SELECT SUM(Revenue) FROM gold.fact_sales WHERE Is_cancelled = 0 AND Is_non_product = 0) * 100 AS DECIMAL(5,2)) AS Percentage_of_Total
+    SUM(f.Revenue) AS Total_Revenue
 FROM gold.fact_sales f
 JOIN gold.dim_customer c ON f.Customer_key = c.Customer_key
-WHERE f.Is_cancelled = 0 AND f.Is_non_product = 0
+WHERE f.Is_cancelled = 0 AND f.Is_non_product = 0 AND f.Is_anomaly_price = 0
 GROUP BY CASE WHEN c.Customer_id = -1 THEN 'Anonymous' ELSE 'Registered' END;
 
--- 3. New Customer Acquisition by Month (2010)
+-- 2. RFM Segment Distribution (Bar Chart)
 SELECT 
-    YEAR(First_purchase_date) AS Year,
-    MONTH(First_purchase_date) AS Month,
-    COUNT(Customer_key) AS New_Customers_Acquired
+    RFM_Segment, 
+    COUNT(Customer_key) AS Total_Customers
 FROM gold.dim_customer
-WHERE Customer_id != -1 AND YEAR(First_purchase_date) = 2010
-GROUP BY YEAR(First_purchase_date), MONTH(First_purchase_date)
-ORDER BY Year, Month;
+WHERE Customer_id != -1
+GROUP BY RFM_Segment
+ORDER BY Total_Customers DESC;
+
+-- 3. Cohort Retention Matrix (Heatmap)
+-- This query validates the number of retained customers for the Jan 2010 cohort at Month 0 and Month 1
+SELECT 
+    YEAR(c.First_purchase_date) AS Cohort_Year,
+    MONTH(c.First_purchase_date) AS Cohort_Month,
+    f.Cohort_Month_Offset,
+    COUNT(DISTINCT f.Customer_key) AS Retained_Customers
+FROM gold.fact_sales f
+JOIN gold.dim_customer c ON f.Customer_key = c.Customer_key
+WHERE c.Customer_id != -1 AND f.Is_cancelled = 0
+  AND YEAR(c.First_purchase_date) = 2010 AND MONTH(c.First_purchase_date) = 1
+  AND f.Cohort_Month_Offset IN (0, 1)
+GROUP BY YEAR(c.First_purchase_date), MONTH(c.First_purchase_date), f.Cohort_Month_Offset
+ORDER BY f.Cohort_Month_Offset;
+
+-- 4. VIP "Champions" List (Table Visual)
+SELECT TOP 10
+    Customer_id,
+    Country,
+    Recency,
+    Frequency,
+    Monetary
+FROM gold.dim_customer
+WHERE RFM_Segment = 'Champions'
+ORDER BY Monetary DESC;
 
 
 PRINT '================================================';
@@ -121,3 +134,38 @@ SELECT
     SUM(Revenue) AS Financial_Impact
 FROM gold.fact_sales
 WHERE Is_anomaly_price = 1 OR Is_inventory_adjustment = 1;
+
+-- 4. Pareto Analysis 
+WITH ProductSales AS (
+    -- Step 1: Calculate total clean revenue for each product (Excluding UNKNOWN PRODUCT)
+    SELECT 
+        p.Description,
+        SUM(f.Revenue) AS Total_Revenue
+    FROM gold.fact_sales f
+    JOIN gold.dim_product p ON f.Product_key = p.Product_key
+    WHERE f.Is_cancelled = 0 
+      AND f.Is_non_product = 0 
+      AND f.Is_anomaly_price = 0
+      AND p.Description != 'UNKNOWN PRODUCT'
+    GROUP BY p.Description
+),
+CumulativeSales AS (
+    -- Step 2: Calculate the running total and the grand total using Window Functions
+    SELECT 
+        Description,
+        Total_Revenue,
+        -- This creates the running cumulative total, sorting by the highest earners first
+        SUM(Total_Revenue) OVER (ORDER BY Total_Revenue DESC) AS Running_Total,
+        -- This gets the Grand Total of the entire store
+        SUM(Total_Revenue) OVER () AS Grand_Total
+    FROM ProductSales
+)
+-- Step 3: Divide the Running Total by the Grand Total to get the Pareto %
+SELECT TOP 50
+    Description,
+    Total_Revenue,
+    Running_Total,
+    Grand_Total,
+    CAST((Running_Total / Grand_Total) * 100 AS DECIMAL(5,2)) AS Pareto_Percentage
+FROM CumulativeSales
+ORDER BY Total_Revenue DESC;

@@ -20,7 +20,11 @@ For full architectural details and diagrams, see [docs/architecture.md](docs/arc
 * `/sql/03_gold`: DDL and ETL scripts for building the Dimensional Model (Star Schema).
 * `/tests`: Data Quality (DQ) scripts to validate row counts, foreign key integrity, and business logic across all layers.
 * `/docs`: Project documentation, data dictionaries, and naming conventions.
-* `/powerbi`: Contains the final Power BI dashboard files (Analytics phase).
+* `/powerbi`: Contains the final Power BI dashboard documentation, DAX logic, and deep-dive technical discussions:
+  * [Dashboard 1: Executive Sales Summary](powerbi/dashboard1_executive_summary.md)
+  * [Dashboard 2: Customer Insights & Retention](powerbi/dashboard2_customer_retention.md)
+  * [Dashboard 3: Product Performance & Pareto](powerbi/dashboard3_product_performance.md)
+  * [Dashboard 4: Geographic Trends](powerbi/dashboard4_geographic_trends.md)
 
 ## 📚 Documentation
 * [Architecture & Data Flow](docs/architecture.md)
