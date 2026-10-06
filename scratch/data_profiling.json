@@ -1,0 +1,60 @@
+{
+    "Total_Rows": 1067371,
+    "Invoice": {
+        "Cancellations_Count": 19494,
+        "Other_Letters_Count": 6,
+        "Nulls": 0
+    },
+    "StockCode": {
+        "Nulls": 0,
+        "Unique_Non_Standard": [
+            "POST",
+            "79323LP",
+            "15056BL",
+            "D",
+            "79323GR",
+            "DCGS0058",
+            "DCGS0068",
+            "DOT",
+            "15056bl",
+            "M",
+            "DCGS0004",
+            "DCGS0076",
+            "C2",
+            "BANK CHARGES",
+            "DCGS0003",
+            "TEST001",
+            "gift_0001_80",
+            "DCGS0072",
+            "gift_0001_20",
+            "DCGS0044"
+        ]
+    },
+    "Description": {
+        "Nulls": 4382,
+        "Unique_Descriptions": 5698
+    },
+    "Quantity": {
+        "Nulls": 0,
+        "Negatives": 22950,
+        "Zeros": 0,
+        "Max": 80995,
+        "Min": -80995
+    },
+    "Price": {
+        "Nulls": 0,
+        "Negatives": 5,
+        "Zeros": 6202,
+        "Max": 38970.0,
+        "Min": -53594.36
+    },
+    "Customer_ID": {
+        "Nulls": 243007,
+        "Unique_Customers": 5942
+    },
+    "Country": {
+        "Nulls": 0,
+        "Unspecified_Count": 756,
+        "Unique_Countries": 43
+    }
+}
