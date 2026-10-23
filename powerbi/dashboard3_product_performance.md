@@ -51,6 +51,8 @@ CALCULATE(
 
 ## 📊 Visualizations (The Canvas)
 
+![Product Performance & Pareto Analysis Dashboard](images/dashboard3_product_performance.png)
+
 **A. The Pareto Chart (Top Half)**
 - Add a **Line and Stacked Column Chart**.
 - **X-axis:** `Description` (from `dim_product`). Filter to **Top 50**.

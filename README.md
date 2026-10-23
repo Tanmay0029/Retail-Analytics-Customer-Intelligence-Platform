@@ -20,11 +20,22 @@ For full architectural details and diagrams, see [docs/architecture.md](docs/arc
 * `/sql/03_gold`: DDL and ETL scripts for building the Dimensional Model (Star Schema).
 * `/tests`: Data Quality (DQ) scripts to validate row counts, foreign key integrity, and business logic across all layers.
 * `/docs`: Project documentation, data dictionaries, and naming conventions.
-* `/powerbi`: Contains the final Power BI dashboard documentation, DAX logic, and deep-dive technical discussions:
-  * [Dashboard 1: Executive Sales Summary](powerbi/dashboard1_executive_summary.md)
-  * [Dashboard 2: Customer Insights & Retention](powerbi/dashboard2_customer_retention.md)
-  * [Dashboard 3: Product Performance & Pareto](powerbi/dashboard3_product_performance.md)
-  * [Dashboard 4: Geographic Trends](powerbi/dashboard4_geographic_trends.md)
+* `/powerbi`: Contains the final Power BI dashboard documentation, DAX logic, deep-dive technical discussions, and dashboard screenshots:
+  * **[Dashboard 1: Executive Sales Summary](powerbi/dashboard1_executive_summary.md)**
+    <br/>
+    <img src="powerbi/images/dashboard1_executive_summary.png" alt="Executive Sales Summary Dashboard" width="100%"/>
+    
+  * **[Dashboard 2: Customer Insights & Retention](powerbi/dashboard2_customer_retention.md)**
+    <br/>
+    <img src="powerbi/images/dashboard2_customer_retention.png" alt="Customer Insights & Retention Dashboard" width="100%"/>
+    
+  * **[Dashboard 3: Product Performance & Pareto](powerbi/dashboard3_product_performance.md)**
+    <br/>
+    <img src="powerbi/images/dashboard3_product_performance.png" alt="Product Performance & Pareto Analysis Dashboard" width="100%"/>
+    
+  * **[Dashboard 4: Geographic Trends](powerbi/dashboard4_geographic_trends.md)**
+    <br/>
+    <img src="powerbi/images/dashboard4_geographic_trends.png" alt="Geographic Trends Dashboard" width="100%"/>
 
 ## 📚 Documentation
 * [Architecture & Data Flow](docs/architecture.md)

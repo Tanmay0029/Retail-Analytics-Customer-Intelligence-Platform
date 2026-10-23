@@ -53,6 +53,9 @@ CALCULATE(
 ```
 
 ## 📊 Visualizations (The Canvas)
+
+![Executive Sales Summary Dashboard](images/dashboard1_executive_summary.png)
+
 **A. High-Level KPIs (Top Row)**
 - Add **Card** visuals for `[Total Revenue]`, `[Total Items Sold]`, and `[Total Valid Orders]`.
 

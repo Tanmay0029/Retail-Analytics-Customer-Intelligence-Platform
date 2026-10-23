@@ -29,6 +29,8 @@ RETURN
 
 ## 📊 Visualizations (The Canvas)
 
+![Geographic Trends Dashboard](images/dashboard4_geographic_trends.png)
+
 **A. Domestic vs International Split (Top Left)**
 - Add a **Donut Chart**.
 - **Legend:** `Market_Type` (from `dim_customer`).

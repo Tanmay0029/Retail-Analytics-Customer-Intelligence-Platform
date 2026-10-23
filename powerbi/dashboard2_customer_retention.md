@@ -45,6 +45,8 @@ CALCULATE(
 
 ## 📊 Visualizations (The Canvas)
 
+![Customer Insights & Retention Dashboard](images/dashboard2_customer_retention.png)
+
 **A. The "Anonymous" Problem (Top Left)**
 - Add a **Donut Chart**.
 - **Values:** `[Registered Revenue]` and `[Anonymous Revenue]`.
